@@ -8,6 +8,7 @@ services:
       - "4750:4750"
     volumes:
       - "/home/pi/dev/dwc2-klipper/klipper-printer-cfg-files/klipper-printer.cfg/cr10s_skr_1.3_bltouch-printer.cfg:/home/dwc2-klipper/config/printer.cfg"
+      - /dev:/dev
     environment:
       TZ: America/Los_Angeles
     restart: unless-stopped
@@ -20,6 +21,7 @@ services:
       - "4751:4750"
     volumes:
       - "/home/pi/dev/dwc2-klipper/klipper-printer-cfg-files/klipper-printer.cfg/ender_3-skr_e3_mini_v1.2-printer.cfg:/home/dwc2-klipper/config/printer.cfg"
+      - /dev:/dev
     environment:
       TZ: America/Los_Angeles
     restart: unless-stopped
@@ -33,6 +35,7 @@ services:
     volumes:
       - "/home/pi/dev/dwc2-klipper/klipper-printer-cfg-files/klipper-printer.cfg/anycubic-kossel_skr_1.4_bltouch-printer.cfg:/home/dwc2-klipper/config/printer.cfg"
       - "/home/pi/dev/dwc2-klipper/klipper-printer-cfg-files/klipper-printer.cfg/anycubic-kossel_skr_1.4_bltouch-menu.cfg:/home/dwc2-klipper/config/menu.cfg"
+      - /dev:/dev
     environment:
       TZ: America/Los_Angeles
     restart: unless-stopped
