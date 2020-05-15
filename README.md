@@ -16,6 +16,12 @@ Referencs:
 * https://klipper.info/klipper-+-dwc2-1/things-to-know-about-klipper-and-dwc2
 * Because of recent changes to Klipper, this utilizes the fork from pluuuk as discussed [here](https://github.com/Stephan3/dwc2-for-klipper/issues/73).
 
+## Pre-requisites
+Ensure docker and docker-compose are installed on your host. Some references:
+
+* [How to install Docker on Raspberry Pi](https://phoenixnap.com/kb/docker-on-raspberry-pi)
+* [How to install Docker Compose on Ubuntu](https://phoenixnap.com/kb/install-docker-compose-ubuntu), best bet for Rpi: `sudo apt-get install docker-compose`
+
 
 ## Prepare your printer.cfg file
 
