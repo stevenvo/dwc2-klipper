@@ -1,16 +1,25 @@
 # dwc2-klipper
 
-dwc2-klipper is a Docker image for running [DWC2] and [Klipper] 3d Printer controllers. It is design to run on Raspberry Pi or similar.
+## Credit
 
-[More info](https://klipper.info/klipper-+-dwc2-1/things-to-know-about-klipper-and-dwc2)
+This is a branch from [seanauff dwc2-klipper repo](https://github.com/seanauff/dwc2-klipper) (credit to seanauff).
 
-[DockerHub Image](https://hub.docker.com/r/seanauff/dwc2-klipper)
+The change is for my personal use to support multipler printers from a single Raspberry Pi. 
 
-Because of recent changes to Klipper, this utilizes the fork from pluuuk as discussed [here](https://github.com/Stephan3/dwc2-for-klipper/issues/73).
+
+## Context
+
+dwc2-klipper is a [Docker image](https://hub.docker.com/repository/docker/stevenvo/dwc2-klipper) for running [DWC2] and [Klipper] for 3d Printing controllers. It is design to run on Raspberry Pi or similar.
+
+Referencs:
+
+* https://klipper.info/klipper-+-dwc2-1/things-to-know-about-klipper-and-dwc2
+* Because of recent changes to Klipper, this utilizes the fork from pluuuk as discussed [here](https://github.com/Stephan3/dwc2-for-klipper/issues/73).
+
 
 ## Prepare your printer.cfg file
 
-Copy an appropriate config file from [here](https://github.com/KevinOConnor/klipper/tree/master/config) and add the following lines to it:
+Assuming you already have a klipper printer.cfg file, add these lines into each of your printer.cfg files.
 
 ```cfg
 [virtual_sdcard]
@@ -27,30 +36,33 @@ listen_port: 4750
 web_path: dwc2/web
 ```
 
-Rename the file `printer.cfg` and place in a known place on your docker host, which you will mount when starting the container.
+Place in a known place on your docker host (Raspberry Pi), which you will mount when starting the container using below instructions.
 
-## Running via Docker
+## Update docker-compose.yaml file
+Open `docker-compose.yaml` file using your text edit, notice there are 3 sections like below:
 
-Pull the image. If using raspberry pi or similar use `arm` in place of `[tag]`. `amd64` is also available:
-
-```shell
-docker pull seanauff/dwc2-klipper:[tag]
 ```
-
-Start the container:
-
-```shell
-docker run -d --device /dev/ttyUSB0:/dev/ttyUSB0 -v [some/path/on/host]:/home/dwc2-klipper/config -p 4750:4750 seanauff/dwc2-klipper:[tag]
+  dwc2-klipper-cr10s:
+    image: "stevenvo/dwc2-klipper:arm"
+    container_name: cr10s
+    privileged: true
+    ports:
+      - "4750:4750"
+    volumes:
+      - "/home/pi/dev/dwc2-klipper/klipper-printer-cfg-files/klipper-printer.cfg/cr10s_skr_1.3_bltouch-printer.cfg:/home/dwc2-klipper/config/printer.cfg"
+    environment:
+      TZ: America/Los_Angeles
+    restart: unless-stopped
 ```
+Each of that section is used for creating a docker container for each of your printer. 
 
-### Build the image yourself
+Go ahead to update the 
 
-Clone the repository and build the image:
+- service name (dwc2-klipper-cr10s) to your own definition
+- the `container_name` to your own definition
+- For `volumes`, change the path before `:` to where the corresponding klipper printer.cfg file on your host (Raspberry Pi) locates. 
 
-```shell
-git clone https://github.com/seanauff/dwc2-klipper.git
-docker build -t seanauff/dwc2-klipper dwc2-klipper
-```
+## Spin up the container
 
-[DWC2]: https://github.com/Stephan3/dwc2-for-klipper
-[Klipper]: https://github.com/KevinOConnor/klipper
+on host (Raspberry Pi), execute `docker-compose up -d` 
+
