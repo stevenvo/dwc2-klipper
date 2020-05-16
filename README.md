@@ -9,7 +9,7 @@ The change is for my personal use to support multipler printers from a single Ra
 
 ## Context
 
-dwc2-klipper is a [Docker image](https://hub.docker.com/repository/docker/stevenvo/dwc2-klipper) for running [DWC2] and [Klipper] for 3d Printing controllers. It is design to run on Raspberry Pi or similar.
+dwc2-klipper is a [Docker image](https://hub.docker.com/repository/docker/stevenvo/dwc2-klipper) for running [DWC2] and [Klipper] for 3d Printing controllers. It is designed to run on Raspberry Pi or similar.
 
 Referencs:
 
@@ -24,6 +24,8 @@ Ensure docker and docker-compose are installed on your host. Some references:
 
 
 ## Prepare your printer.cfg file
+
+### Add DWC2 config
 
 Assuming you already have a klipper printer.cfg file, add these lines into each of your printer.cfg files.
 
@@ -42,9 +44,9 @@ listen_port: 4750
 web_path: dwc2/web
 ```
 
-### Structure your printer.cfg files
+### Where to place your printer.cfg files
 
-Place each `printer.cfg` file into a separate folder. The `docker-compose.yaml` shares each config folder on host with the corresponding containers. Example structure used by the docker-compose currently:
+For each printer config file. place the `printer.cfg` file into a separate folder on your host (Raspberry Pi). You can rename the folder to your printer name, for example:
 
 ```
 $ ls -lsh
@@ -52,19 +54,15 @@ $ ls -lsh
 4.0K drwxr-xr-x 2 pi pi 4.0K May 16 11:34 ender3-klipper-printer.cfg
 4.0K drwxr-xr-x 2 pi pi 4.0K May 16 11:35 kossel-klipper-printer.cfg
 ```
-`cr10s-klipper-printer.cfg` is a folder on host, containers a `printer.cfg` file and will be shared to each container. Feel free to change this folder name, but ensure to update `docker-compose.yaml` with the new name in `volume` section.
 
-```
-$ ls -lsh cr10s-klipper-printer.cfg
-8.0K -rw-r--r-- 1 pi   pi   4.2K May 16 11:28 printer-20200516_184449.cfg
-8.0K -rw-r--r-- 1 root root 4.1K May 16 11:44 printer.cfg
-```
-
-This structure will resolve the `save_config` error due to the container fails to [rename the printer.cfg to backup config](https://github.com/KevinOConnor/klipper/blob/master/klippy/configfile.py#L314). 
+As above, `cr10s-klipper-printer.cfg` is a folder on host, it containers a `printer.cfg` file. This folder will be shared to the corresponding container. This is configured in `volume` section in `docker-compose.yaml`. Feel free to change the folder name, just needs to ensure same name is updated into `docker-compose.yaml`.
 
 
-## Update docker-compose.yaml file
-Open `docker-compose.yaml` file using your text edit, notice there are 3 sections like below:
+**Why do this?** This folder structure will resolve the `save_config` error due to Klipper unable to rename the `printer.cfg` to the backup config file (klipper [code](https://github.com/KevinOConnor/klipper/blob/master/klippy/configfile.py#L314)) due to lack of permission. 
+
+
+## docker-compose.yaml
+To add/edit/remove printers, update your `docker-compose.yaml` file using your text edit, notice there are 3 sections like below:
 
 ```
   dwc2-klipper-cr10s:
@@ -81,11 +79,11 @@ Open `docker-compose.yaml` file using your text edit, notice there are 3 section
 ```
 Each of that section is used for creating a docker container for each of your printer. 
 
-Go ahead to update the 
-
-- service name (dwc2-klipper-cr10s) to your own definition
-- the `container_name` to your own definition
-- For `volumes`, change the path before `:` to where the corresponding foldet containing the `printer.cfg` file on your host (Raspberry Pi) locates. 
+- service name (dwc2-klipper-cr10s): any name you like 
+- `container_name`: any printer name you like
+- `volumes`
+	- path before `:`: the folder containing the `printer.cfg` file on your host.
+	- path after `:`: the folder containing `printer.cfg` file on your container. 
 
 ## Spin up the container
 
