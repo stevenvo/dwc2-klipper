@@ -19,7 +19,7 @@ Referencs:
 ## Pre-requisites
 Ensure docker and docker-compose are installed on your host. Some references:
 
-* [How to install Docker on Raspberry Pi](https://phoenixnap.com/kb/docker-on-raspberry-pi)
+* [How to install Docker on Raspberry Pi](https://dev.to/rohansawant/installing-docker-and-docker-compose-on-the-raspberry-pi-in-5-simple-steps-3mgl)
 * [How to install Docker Compose on Ubuntu](https://phoenixnap.com/kb/install-docker-compose-ubuntu), best bet for Rpi: `sudo apt-get install docker-compose`
 
 
